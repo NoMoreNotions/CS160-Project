@@ -1,0 +1,10 @@
+.page-header {
+  text-align: center;
+}
+.login-form {
+  width: 350px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  background: #ffffff;
+}
