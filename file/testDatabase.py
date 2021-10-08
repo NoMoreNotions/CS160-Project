@@ -11,7 +11,7 @@ cursor = db.cursor()
 #cursor.execute("CREATE TABLE users (name VARCHAR(255),age smallint UNSIGNED, user_ID int PRIMARY KEY AUTO_INCREMENT)")
 #cursor.execute("CREATE TABLE foodTable (name VARCHAR(255),calories int UNSIGNED, food_ID int PRIMARY KEY AUTO_INCREMENT)")
 
-##query = "INSERT INTO users (name, age) VALUES (%s, %s)"
+#query = "INSERT INTO users (name, age) VALUES (%s, %s)"
 #query2 = "INSERT INTO foodTable (name, calories) VALUES (%s, %s)"
 
 ## storing values in a variable
