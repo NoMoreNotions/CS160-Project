@@ -1,2 +1,2 @@
-DROP TABLE users;
-DROP TABLE foodHistory;
+DROP TABLE AppUsers;
+DROP TABLE FoodHistory;
