@@ -1,3 +1,7 @@
+DROP TABLE AppUsers;
+DROP TABLE FoodHistory;
+DROP TABLE CalorieInfo;
+
 CREATE TABLE AppUsers
 (userID int PRIMARY KEY,
 username VARCHAR(255) NOT NULL,
