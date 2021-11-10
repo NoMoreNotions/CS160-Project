@@ -34,7 +34,7 @@ INSERT INTO AppUsers VALUES
 (4, 'Tran',    'Cassidy223',   22, 240, 190, 160);
 
 INSERT INTO CalorieInfo VALUES 
-(102, 'Burger',       540), 
+(102, 'Burger',       540),
 (622, 'Apples',       20),
 (272, 'Bananas',      20),
 (978, 'Pasta',        320),
