@@ -1,7 +1,5 @@
 USE caloriedb;
-DROP TABLE appusers;
-DROP TABLE calorieinfo;
-DROP TABLE foodhistory;
+
 
 CREATE TABLE AppUsers
 (userID int PRIMARY KEY AUTO_INCREMENT,

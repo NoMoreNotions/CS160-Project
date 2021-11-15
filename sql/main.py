@@ -7,7 +7,7 @@ from multipledispatch import dispatch
 db = mysql.connector.connect(
 	host="localhost",
 	user="root",
-	passwd="root",
+	passwd="password",
 	database="caloriedb"
 	)
 
