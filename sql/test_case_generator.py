@@ -1,7 +1,6 @@
 import datetime
 from datetime import datetime, timedelta
 import hashlib
-from multipledispatch import dispatch
 import random
 from random import randint
 
@@ -24,8 +23,8 @@ foodIDs = {}
 main = "USE caloriedb;\nDROP TABLE appusers;\nDROP TABLE calorieinfo;\nDROP TABLE foodhistory;\n\nCREATE TABLE AppUsers\n(userID int PRIMARY KEY AUTO_INCREMENT,\nusername VARCHAR(255) NOT NULL,\npassword VARCHAR(255) NOT NULL,\nage smallint,\nweight int,\nheight int,\ngoalWeight int\n);\n\nCREATE TABLE CalorieInfo\n(itemID int PRIMARY KEY,\nfoodName VARCHAR(255) NOT NULL,\ncalorie int NOT NULL\n);\n\nCREATE TABLE FoodHistory\n(itemID int,\nuserID int,\nquantity int NOT NULL,\ndateInfo date\n);\n\n"
 
 # CHANGE PARAMETERS HERE #
-userCount = 10
-ageRange = (20, 30)
+userCount = 8
+ageRange = (20, 40)
 weightRange = (150, 250)
 heightRange = (150, 200)
 goalRange = (-40, -10)
@@ -79,5 +78,5 @@ main += ";"
 
 #print(main)
 
-with open("calorie.sql", "w") as text_file:
+with open("sample_database.sql", "w") as text_file:
     text_file.write(main)
