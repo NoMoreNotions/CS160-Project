@@ -2,8 +2,14 @@ import mysql.connector
 import datetime as date
 from datetime import datetime, timedelta
 import hashlib
-from multipledispatch import dispatch
 
+# NOTES:
+# - replace print statements with POST/GET requests for HTML integration
+# - make stronger password checks for user creation
+# - use test_case_generator.py to create a sample database
+# - run main.py in python terminal to test functions on sample database
+
+# CHANGE USER/PASS TO WORK WITH MYSQL WORKBENCH #
 db = mysql.connector.connect(
 	host="localhost",
 	user="root",
@@ -12,16 +18,11 @@ db = mysql.connector.connect(
 	)
 
 mycursor = db.cursor()
-time = date.datetime.now().strftime("%Y-%m-%d %H:%M")
- 
-#mycursor.execute("SELECT CalorieInfo.foodName FROM CalorieInfo INNER JOIN FoodHistory ON FoodHistory.itemID = CalorieInfo.itemID WHERE DATE_FORMAT(dateInfo, '%m') = DATE_FORMAT('2021-09-01 00:00', '%m') AND userID = 2;");
-#mycursor.execute("SELECT CalorieInfo.foodName FROM CalorieInfo INNER JOIN FoodHistory ON FoodHistory.itemID = CalorieInfo.itemID WHERE userID = 2;");
-#user = "martin"
-#mycursor.execute("SELECT password FROM AppUsers WHERE username=\"{}\"".format(user))
 
 userID = ''
 loggedIn = False
 
+# crosscheck database with login credentials
 def login(user, passwd):
 	global loggedIn, userID
 	mycursor.execute("SELECT * FROM AppUsers WHERE username=\"{}\"".format(user))
@@ -37,25 +38,27 @@ def login(user, passwd):
 	else:
 		print("User does not exist.")
 
-@dispatch(str, int, str)
-def addFood(food, quantity, dateValue):
+# adds food to database given food name with quantity and date of consumption, only if user is logged in
+def addFoodDate(food, quantity, dateValue):
 	if loggedIn == True:
 		mycursor.execute("SELECT itemID FROM CalorieInfo WHERE foodName='{}'".format(food))
-		if mycursor.fetchone() != None:
-			mycursor.execute("SELECT itemID FROM CalorieInfo WHERE foodName='{}'".format(food))
-			foodID = mycursor.fetchone()[0]
+		results = mycursor.fetchone()
+		if results != None:
+			foodID = results[0]
 			time = dateValue
 			mycursor.execute("INSERT INTO FoodHistory (itemID, userID, quantity, dateInfo) VALUES ({}, {}, {}, '{}')".format(foodID, userID, quantity, time))
+			db.commit()
 			print("Food added successfully.")
 		else:
 			print("Food does not exist in the database.")
 	else:
 		print("Please sign in.")
 
-@dispatch(str, int)
+# adds food to database with date of consumption set to current time
 def addFood(food, quantity):
-	addFood(food, quantity, date.datetime.now().strftime("%Y-%m-%d %H:%M"))
+	addFoodDate(food, quantity, date.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
+# view list of foods consumed on specified date
 def viewFood(dateValue):
 	if loggedIn == True:
 		mycursor.execute("SELECT * FROM FoodHistory WHERE userID={} AND DATE_FORMAT(dateInfo, '%Y-%m-%d') = DATE_FORMAT('{}', '%Y-%m-%d')".format(userID, dateValue))
@@ -72,6 +75,7 @@ def viewFood(dateValue):
 	else:
 		print("Please sign in.")
 
+# view number of calories consumed on specified date
 def viewDayCal(dateValue, histBool):
 	if loggedIn == True:
 		mycursor.execute("SELECT * FROM FoodHistory WHERE userID={} AND DATE_FORMAT(dateInfo, '%Y-%m-%d') = DATE_FORMAT('{}', '%Y-%m-%d')".format(userID, dateValue))
@@ -91,6 +95,7 @@ def viewDayCal(dateValue, histBool):
 		print("Please sign in.")
 		return None
 
+# view past 30 day history of calories after specified date
 def viewHistory(dateValue):
 	sumArr = []
 	for i in range(30):
@@ -101,6 +106,7 @@ def viewHistory(dateValue):
 		sumArr.append(sum(calSum))
 	print(sumArr)
 
+# show user details 
 def showProfile():
 	if loggedIn == True:
 		mycursor.execute("SELECT * FROM AppUsers WHERE userID={}".format(userID))
@@ -109,7 +115,8 @@ def showProfile():
 		print(profile)
 	else:
 		print("Please sign in.")
-		
+
+# add user credentials to AppUsers table
 def signUp(user, passwd):
 	mycursor.execute("INSERT INTO AppUsers (username, password) VALUES ('{}', '{}')".format(user, hashlib.sha256(passwd.encode()).hexdigest()))
 	print("Sign up successful. Please sign in.")
@@ -120,6 +127,7 @@ def logout():
 	loggedIn = False
 	print("Logout successful.")
 
+# main terminal input loop
 while True:	
 	try:
 		string = input("Input: ")
@@ -134,7 +142,7 @@ while True:
 			if len(inputArr) == 3:
 				addFood(inputArr[1], int(inputArr[2]))
 			elif len(inputArr) == 4:
-				addFood(inputArr[1], int(inputArr[2]), inputArr[3])
+				addFoodDate(inputArr[1], int(inputArr[2]), inputArr[3])
 		elif inputArr[0] == "view":
 			viewFood(inputArr[1])
 		elif inputArr[0] == "profile":
@@ -150,25 +158,3 @@ while True:
 	except:
 		print("Invalid entry.")
 	
-
-#signUp("clod", "test")
-#login("clod", "test")
-#addFood("kitkat", 1)
-#addFood("kitkat", 2)
-#viewFood("2021-11-12")
-
-#mycursor.execute("SELECT * FROM FoodHistory")
-
-## EDIT BELOW ##
-
-# mycursor.execute("CREATE TABLE credentials (id INTEGER PRIMARY KEY AUTO_INCREMENT, user VARCHAR(20) UNIQUE, pass VARCHAR(20))")
-# mycursor.execute("INSERT INTO credentials (id, user, pass) VALUES (1, 'user1', 'pass1'), (2, 'user2', 'pass2')")
-# mycursor.execute("ALTER TABLE credentials ALTER COLUMN id INTEGER PRIMARY KEY AUTO_INCREMENT")
-# mycursor.execute("INSERT INTO credentials (user, pass) VALUES (%s,%s)", ('user3', 'pass3'))
-#db.commit()
-
-#mycursor.execute("SELECT * FROM credentials")
-#value = mycursor.fetchone()[0]
-#print(value)
-#for x in mycursor:
-	#print(x[0])
