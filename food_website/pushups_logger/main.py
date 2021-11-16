@@ -37,11 +37,11 @@ def new_workout():
 @login_required
 def new_workout_post():
     food_name = request.form.get('food-name')
-    calories = request.form.get('calorie')
+    calorie = request.form.get('calorie')
 
-    print(calories, food_name)
+    print(calorie, food_name)
     food = FoodItem(food_name=food_name,
-                    calories=calories, author=current_user)
+                    calorie=calorie, author=current_user)
     db.session.add(food)
     db.session.commit()
     flash('Your food item has been added!')
@@ -54,7 +54,7 @@ def update_workout(food_id):
     food = FoodItem.query.get_or_404(food_id)
     if request.method == "POST":
         food.food_name = request.form['food-name']
-        food.calories = request.form['calories']
+        food.calorie = request.form['calorie']
         db.session.commit()
         flash('Your post has been updated!')
         return redirect(url_for('main.user_workouts'))
