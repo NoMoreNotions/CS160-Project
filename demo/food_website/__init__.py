@@ -20,7 +20,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User, FoodItem
+    from .models import User
 
     create_database(app)
 

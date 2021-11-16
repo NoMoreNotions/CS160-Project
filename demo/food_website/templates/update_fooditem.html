@@ -7,7 +7,7 @@
 <div class="col-md-4 col-md-offset-4">
   <form
     method="POST"
-    action="{{ url_for('main.update_workout', food_id=food.id) }}"
+    action="{{ url_for('main.update_fooditem', food_id=food.id) }}"
   >
     <h2>Update Food History</h2>
     {% with messages = get_flashed_messages() %} {% if messages %}

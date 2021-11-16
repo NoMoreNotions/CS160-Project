@@ -28,3 +28,9 @@ class FoodItem(db.Model):
                             default=datetime.utcnow)
     calorie = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class FoodData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    food_name = db.Column(db.Text, nullable=False)
+    calorie = db.Column(db.Integer, nullable=False)

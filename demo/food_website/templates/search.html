@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename= 'extended_beauty.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<div class="col-md-4 col-md-offset-4">
+    <form method="POST" action="/search">
+        <h3>Search for a food item within our database!</h3>
+        <div class="form-group">
+            <label for="food-name">Food Search</label>
+            <input
+                type="text"
+                class="form-control"
+                id="food-name"
+                name="food-name"
+                aria-describedby="calorieHelp"
+                placeholder="Enter food name for search"
+            />
+        </div>
+        <button type="submit" class="btn btn-primary">Search Food</button>
+    </form>
+</div>
+{% endblock %}

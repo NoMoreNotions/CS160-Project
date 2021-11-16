@@ -27,7 +27,7 @@
         <td>{{ food.food_name }}</td>
         <td>
           <a
-            href="{{ url_for('main.update_workout', food_id=food.id) }}"
+            href="{{ url_for('main.update_fooditem', food_id=food.id) }}"
             class="btn btn-outline-primary"
             role="button"
           >
@@ -36,7 +36,7 @@
         </td>
         <td>
           <a
-            href="{{ url_for('main.delete_workout', food_id=food.id) }}"
+            href="{{ url_for('main.delete_fooditem', food_id=food.id) }}"
             class="btn btn-outline-danger"
             role="button"
           >
