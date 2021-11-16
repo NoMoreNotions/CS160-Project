@@ -24,7 +24,10 @@ def user_workouts():
     user = User.query.filter_by(email=current_user.email).first_or_404()
     # Workout.query.filter_by(author=user).order_by(Workout.date_posted.desc())
     foods = user.foods
-    return render_template('all_workouts.html', foods=foods, user=user)
+    totalCalorie = 0
+    for food in foods:
+        totalCalorie = totalCalorie + food.calorie
+    return render_template('all_workouts.html', foods=foods, user=user, totalCalorie=totalCalorie)
 
 
 @main.route("/new")
