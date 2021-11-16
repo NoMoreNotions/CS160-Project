@@ -89,7 +89,6 @@ def search_post():
     print(result_string)
     item_name = result_string[0][0], result_string[1][0], result_string[2][0]
     item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
-    flash('Returning result!')
     return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
 
 

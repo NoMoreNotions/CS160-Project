@@ -11,22 +11,29 @@
   </div>
   {% endif %} {% endwith %}
   <h1>
-    Hello!
+    Welcome to your personal calorie counter!
   </h1>
   <center>
     <img
-      src="{{ url_for('static', filename= 'images/pushup.png') }}"
-      alt="push-ups boi"
+      src="{{ url_for('static', filename= 'images/food-bg.png') }}"
+      alt="img here"
       height="200px"
     />
   </center>
   <p>
-    Welcome to your pushups-logger! <br />This web app is a minimal clone of
-    <a href="http://www.pushupslogger.com">http://www.pushupslogger.com</a> to
-    implement basic CRUD and User Authentication functionality using Flask. You
-    can add your push-ups workout here, track and visualise(<i
-      >update coming soon</i
-    >) them.
+     <br />With this application, you can:
   </p>
+  <p>
+     - search for food via the NutritionIX database
+  </p>
+  <p>
+     - add/modify calories to a personalized calorie counter
+  </p>
+  <p>
+     - get nutrition facts (in progress)
+  </p>
+  <p>
+     - view food history graph (in progress)
+  </p>    
 </div>
 {% endblock %}
