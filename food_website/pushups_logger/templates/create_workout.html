@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename= 'extended_beauty.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="col-md-4 col-md-offset-4">
+  <form method="POST" action="/new">
+    <h2>Add New Food Item</h2>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="notification is-danger">
+      {{ messages[0] }}
+    </div>
+    {% endif %} {% endwith %}
+    <div class="form-group">
+      <label for="calorie">Item Calorie</label>
+      <input
+        type="number"
+        class="form-control"
+        id="calorie"
+        name="calorie"
+        aria-describedby="calorieHelp"
+        placeholder="Enter calorie amount"
+      />
+    </div>
+    <div class="form-group">
+      <label for="food-name">Food Item</label>
+      <input
+        type="text"
+        class="form-control"
+        id="food-name"
+        name="food-name"
+        aria-describedby="calorieHelp"
+        placeholder="Enter food name"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Food Item</button>
+  </form>
+</div>
+{% endblock %}
