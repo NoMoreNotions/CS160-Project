@@ -1,4 +1,4 @@
-from pushups_logger import create_app
+from food_website import create_app
 
 app = create_app()
 
