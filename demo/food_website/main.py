@@ -6,6 +6,11 @@ from datetime import date
 from datetime import datetime
 import requests
 import json
+<<<<<<< Updated upstream
+=======
+#import pandas as pd
+#import matplotlib.pyplot as plt
+>>>>>>> Stashed changes
 
 main = Blueprint('main', __name__)
 
@@ -18,6 +23,31 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
+<<<<<<< Updated upstream
+=======
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    foods = user.foods
+
+    hist = {}
+
+    for i in range(7):
+        totalCalorie = 0
+
+        my_date = date.today()
+        my_datetime = datetime(my_date.year, my_date.month, my_date.day-i)
+
+        for food in foods:
+            if my_datetime.date() == food.date_posted.date():
+                totalCalorie = totalCalorie + food.calorie
+
+        hist[my_datetime] = totalCalorie
+
+        #s = pd.Series({"calories": hist})
+        #fig, ax = plt.subplots()
+        #s.plot.bar(list(hist.keys()), hist.values(), color='g')
+        #fig.savefig('my_plot.png')
+
+>>>>>>> Stashed changes
     return render_template('profile.html', name=current_user.name)
 
 
