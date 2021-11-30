@@ -27,8 +27,13 @@ def user_fooditems():
     user = User.query.filter_by(email=current_user.email).first_or_404()
     foods = user.foods
     totalCalorie = 0
+
+    my_date = date.today()
+    my_datetime = datetime(my_date.year, my_date.month, my_date.day)
+
     for food in foods:
-        totalCalorie = totalCalorie + food.calorie
+        if my_datetime.date() == food.date_posted.date():
+            totalCalorie = totalCalorie + food.calorie
     return render_template('all_fooditems.html', foods=foods, user=user, totalCalorie=totalCalorie)
 
 
