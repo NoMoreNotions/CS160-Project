@@ -2,6 +2,8 @@ from . import db
 from .models import User, FoodItem, FoodData
 from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
 from flask_login import current_user, login_required
+from datetime import date
+from datetime import datetime
 import requests
 import json
 
@@ -25,8 +27,13 @@ def user_fooditems():
     user = User.query.filter_by(email=current_user.email).first_or_404()
     foods = user.foods
     totalCalorie = 0
+
+    my_date = date.today()
+    my_datetime = datetime(my_date.year, my_date.month, my_date.day)
+
     for food in foods:
-        totalCalorie = totalCalorie + food.calorie
+        if my_datetime.date() == food.date_posted.date():
+            totalCalorie = totalCalorie + food.calorie
     return render_template('all_fooditems.html', foods=foods, user=user, totalCalorie=totalCalorie)
 
 
@@ -40,10 +47,13 @@ def new_fooditem():
 @login_required
 def new_fooditem_post():
     food_name = request.form.get('food-name')
+    date_post = request.form.get('food-date')
     calorie = request.form.get('calorie')
 
-    print(calorie, food_name)
-    food = FoodItem(food_name=food_name,
+    date = datetime.strptime(date_post, "%Y-%m-%d")
+
+    print(calorie, date, food_name)
+    food = FoodItem(food_name=food_name, date_posted=date,
                     calorie=calorie, author=current_user)
     db.session.add(food)
     db.session.commit()
