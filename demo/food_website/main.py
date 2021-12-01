@@ -6,8 +6,11 @@ from datetime import date
 from datetime import datetime
 import requests
 import json
-import pandas as pd
-import matplotlib.pyplot as plt
+<<<<<<< Updated upstream
+=======
+#import pandas as pd
+#import matplotlib.pyplot as plt
+>>>>>>> Stashed changes
 
 main = Blueprint('main', __name__)
 
@@ -20,6 +23,8 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
+<<<<<<< Updated upstream
+=======
     user = User.query.filter_by(email=current_user.email).first_or_404()
     foods = user.foods
 
@@ -37,11 +42,12 @@ def profile():
 
         hist[my_datetime] = totalCalorie
 
-        s = pd.Series({"calories": hist})
-        fig, ax = plt.subplots()
-        s.plot.bar(list(hist.keys()), hist.values(), color='g')
-        fig.savefig('my_plot.png')
+        #s = pd.Series({"calories": hist})
+        #fig, ax = plt.subplots()
+        #s.plot.bar(list(hist.keys()), hist.values(), color='g')
+        #fig.savefig('my_plot.png')
 
+>>>>>>> Stashed changes
     return render_template('profile.html', name=current_user.name)
 
 
@@ -119,14 +125,11 @@ def search():
 @login_required
 def search_post():
     food_name = request.form.get('food-name')
-    try:
-        result_string = food_api_request(food_name)
-        print(result_string)
-        item_name = result_string[0][0], result_string[1][0], result_string[2][0]
-        item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
-        return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
-    except:
-        return render_template('result_fail.html')
+    result_string = food_api_request(food_name)
+    print(result_string)
+    item_name = result_string[0][0], result_string[1][0], result_string[2][0]
+    item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
+    return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
 
 
 def food_api_request(food):
