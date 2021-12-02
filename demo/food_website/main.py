@@ -8,11 +8,9 @@ import calendar
 import requests
 import json
 import pytz
-#import pandas as pd
-#import matplotlib.pyplot as plt
+import math
 
 main = Blueprint('main', __name__)
-
 
 @main.route('/')
 def index():
@@ -41,6 +39,8 @@ def profile():
         bar_values.append(totalCalorie)
         if totalCalorie > maxVal:
             maxVal = totalCalorie
+
+    maxVal = int(math.ceil(maxVal / 100.0)) * 100
 
     return render_template('profile.html', name=current_user.name, title='Calorie History', max=maxVal, labels=bar_labels, values=bar_values)
 
@@ -82,6 +82,24 @@ def new_fooditem_post():
     calorie = request.form.get('calorie')
 
     date = datetime.strptime(date_post, "%Y-%m-%d")
+
+    print(calorie, date, food_name)
+    food = FoodItem(food_name=food_name, date_posted=date,
+                    calorie=calorie, author=current_user)
+    db.session.add(food)
+    db.session.commit()
+    flash('Your food item has been added!')
+    return redirect(url_for('main.index'))
+
+@main.route("/fooditem/add/<int:cal>/<string:food>", methods=['GET', 'POST'])
+@login_required
+def add_search(food, cal):
+    food_name = food  
+    calorie = cal
+
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
+    date_post = str(datetime(my_date.year, my_date.month, my_date.day))
+    date = datetime.strptime(date_post, '%Y-%m-%d %H:%M:%S')
 
     print(calorie, date, food_name)
     food = FoodItem(food_name=food_name, date_posted=date,
