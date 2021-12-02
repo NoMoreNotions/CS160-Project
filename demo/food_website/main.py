@@ -12,6 +12,7 @@ import math
 
 main = Blueprint('main', __name__)
 
+
 @main.route('/')
 def index():
     return render_template('index.html')
@@ -44,12 +45,14 @@ def profile():
 
     return render_template('profile.html', name=current_user.name, title='Calorie History', max=maxVal, labels=bar_labels, values=bar_values)
 
+
 def subtract_date(my_date, i):
     if my_date.day + (i-29) <= 0:
         daysInMonth = calendar.monthrange(my_date.year, my_date.month - 1)[1]
         return datetime(my_date.year, my_date.month - 1, my_date.day + (i + daysInMonth - 29))
     else:
         return datetime(my_date.year, my_date.month, my_date.day + (i-29))
+
 
 @main.route("/all")
 @login_required
@@ -61,6 +64,9 @@ def user_fooditems():
     #my_date = date.today()
     my_date = datetime.now(pytz.timezone('US/Pacific'))
     my_datetime = datetime(my_date.year, my_date.month, my_date.day)
+
+    foods.sort()
+    foods.reverse()
 
     for food in foods:
         if my_datetime.date() == food.date_posted.date():
@@ -91,10 +97,11 @@ def new_fooditem_post():
     flash('Your food item has been added!')
     return redirect(url_for('main.index'))
 
+
 @main.route("/fooditem/add/<int:cal>/<string:food>", methods=['GET', 'POST'])
 @login_required
 def add_search(food, cal):
-    food_name = food  
+    food_name = food
     calorie = cal
 
     my_date = datetime.now(pytz.timezone('US/Pacific'))
@@ -132,7 +139,7 @@ def delete_fooditem(food_id):
     db.session.commit()
     flash('Your post has been deleted!')
     return redirect(url_for('main.user_fooditems'))
-    
+
 
 @main.route("/search")
 @login_required

@@ -5,7 +5,7 @@
 />
 {% endblock %} {% block content %}
 
-<div>
+<div id="intro">
     <h3>The top 3 search results are: </h3>
     <h4> {{ item_name[0] }} ({{ item_calorie[0] }} cal) <a
             href="{{ url_for('main.add_search', food=item_name[0], cal=item_calorie[0]) }}"
