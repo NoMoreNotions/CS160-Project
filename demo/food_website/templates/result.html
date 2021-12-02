@@ -5,10 +5,25 @@
 />
 {% endblock %} {% block content %}
 
-<div>
+<div id="intro">
     <h3>The top 3 search results are: </h3>
-    <h4> Food Name: {{ item_name[0] }} | Calorie: {{ item_calorie[0] }} </h4>
-    <h4> Food Name: {{ item_name[1] }} | Calorie: {{ item_calorie[1] }} </h4>
-    <h4> Food Name: {{ item_name[2] }} | Calorie: {{ item_calorie[2] }} </h4>
+    <h4> {{ item_name[0] }} ({{ item_calorie[0] }} cal) <a
+            href="{{ url_for('main.add_search', food=item_name[0], cal=item_calorie[0]) }}"
+            class="btn btn-outline-primary"
+            role="button">
+            Add
+          </a></h4>  
+    <h4> {{ item_name[1] }} ({{ item_calorie[1] }} cal) <a
+            href="{{ url_for('main.add_search', food=item_name[1], cal=item_calorie[1]) }}"
+            class="btn btn-outline-primary"
+            role="button">
+            Add
+          </a></h4>
+    <h4> {{ item_name[2] }} ({{ item_calorie[2] }} cal) <a
+            href="{{ url_for('main.add_search', food=item_name[2], cal=item_calorie[2]) }}"
+            class="btn btn-outline-primary"
+            role="button">
+            Add
+          </a></h4>
 </div>
 {% endblock %}

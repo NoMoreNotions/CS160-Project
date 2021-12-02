@@ -4,11 +4,11 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import current_user, login_required
 from datetime import date
 from datetime import datetime
+import calendar
 import requests
 import json
 import pytz
-#import pandas as pd
-#import matplotlib.pyplot as plt
+import math
 
 main = Blueprint('main', __name__)
 
@@ -24,26 +24,34 @@ def profile():
     user = User.query.filter_by(email=current_user.email).first_or_404()
     foods = user.foods
 
-    #hist = {}
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
+    bar_labels = []
+    bar_values = []
+    count = 0
+    maxVal = 0
+    for i in range(30):
+        totalCalorie = 0
+        for food in foods:
+            my_datetime = subtract_date(my_date, i)
+            if my_datetime.date() == food.date_posted.date():
+                totalCalorie = totalCalorie + food.calorie
+        my_datetime = subtract_date(my_date, i).strftime('%#m/%#d')
+        bar_labels.append(my_datetime)
+        bar_values.append(totalCalorie)
+        if totalCalorie > maxVal:
+            maxVal = totalCalorie
 
-    #for i in range(7):
-        #totalCalorie = 0
+    maxVal = int(math.ceil(maxVal / 100.0)) * 100
 
-        #my_date = date.today()
-        #my_datetime = datetime(my_date.year, my_date.month, my_date.day-i)
+    return render_template('profile.html', name=current_user.name, title='Calorie History', max=maxVal, labels=bar_labels, values=bar_values)
 
-        #for food in foods:
-            #if my_datetime.date() == food.date_posted.date():
-                #totalCalorie = totalCalorie + food.calorie
 
-        #hist[my_datetime] = totalCalorie
-
-        #s = pd.Series({"calories": hist})
-        #fig, ax = plt.subplots()
-        #s.plot.bar(list(hist.keys()), hist.values(), color='g')
-        #fig.savefig('my_plot.png')
-
-    return render_template('profile.html', name=current_user.name)
+def subtract_date(my_date, i):
+    if my_date.day + (i-29) <= 0:
+        daysInMonth = calendar.monthrange(my_date.year, my_date.month - 1)[1]
+        return datetime(my_date.year, my_date.month - 1, my_date.day + (i + daysInMonth - 29))
+    else:
+        return datetime(my_date.year, my_date.month, my_date.day + (i-29))
 
 
 @main.route("/all")
@@ -56,6 +64,9 @@ def user_fooditems():
     #my_date = date.today()
     my_date = datetime.now(pytz.timezone('US/Pacific'))
     my_datetime = datetime(my_date.year, my_date.month, my_date.day)
+
+    foods.sort()
+    foods.reverse()
 
     for food in foods:
         if my_datetime.date() == food.date_posted.date():
@@ -77,6 +88,25 @@ def new_fooditem_post():
     calorie = request.form.get('calorie')
 
     date = datetime.strptime(date_post, "%Y-%m-%d")
+
+    print(calorie, date, food_name)
+    food = FoodItem(food_name=food_name, date_posted=date,
+                    calorie=calorie, author=current_user)
+    db.session.add(food)
+    db.session.commit()
+    flash('Your food item has been added!')
+    return redirect(url_for('main.index'))
+
+
+@main.route("/fooditem/add/<int:cal>/<string:food>", methods=['GET', 'POST'])
+@login_required
+def add_search(food, cal):
+    food_name = food
+    calorie = cal
+
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
+    date_post = str(datetime(my_date.year, my_date.month, my_date.day))
+    date = datetime.strptime(date_post, '%Y-%m-%d %H:%M:%S')
 
     print(calorie, date, food_name)
     food = FoodItem(food_name=food_name, date_posted=date,

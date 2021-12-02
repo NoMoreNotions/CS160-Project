@@ -4,9 +4,9 @@
   href="{{ url_for('static', filename= 'extended_beauty.css') }}"
 />
 {% endblock %} {% block content %}
-<div class="col-md-4 col-md-offset-4">
+<div class="col-md-4 col-md-offset-4" id="intro">
   <form method="POST" action="/new">
-    <h2>Add New Food Item</h2>
+    <h2 id="intro">Add New Food Item</h2>
     {% with messages = get_flashed_messages() %} {% if messages %}
     <div class="notification is-danger">
       {{ messages[0] }}
