@@ -4,8 +4,11 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import current_user, login_required
 from datetime import date
 from datetime import datetime
+import calendar
 import requests
 import json
+import pytz
+import math
 
 main = Blueprint('main', __name__)
 
@@ -18,7 +21,37 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    foods = user.foods
+
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
+    bar_labels = []
+    bar_values = []
+    count = 0
+    maxVal = 0
+    for i in range(30):
+        totalCalorie = 0
+        for food in foods:
+            my_datetime = subtract_date(my_date, i)
+            if my_datetime.date() == food.date_posted.date():
+                totalCalorie = totalCalorie + food.calorie
+        my_datetime = subtract_date(my_date, i).strftime('%#m/%#d')
+        bar_labels.append(my_datetime)
+        bar_values.append(totalCalorie)
+        if totalCalorie > maxVal:
+            maxVal = totalCalorie
+
+    maxVal = int(math.ceil(maxVal / 100.0)) * 100
+
+    return render_template('profile.html', name=current_user.name, title='Calorie History', max=maxVal, labels=bar_labels, values=bar_values)
+
+
+def subtract_date(my_date, i):
+    if my_date.day + (i-29) <= 0:
+        daysInMonth = calendar.monthrange(my_date.year, my_date.month - 1)[1]
+        return datetime(my_date.year, my_date.month - 1, my_date.day + (i + daysInMonth - 29))
+    else:
+        return datetime(my_date.year, my_date.month, my_date.day + (i-29))
 
 
 @main.route("/all")
@@ -28,8 +61,12 @@ def user_fooditems():
     foods = user.foods
     totalCalorie = 0
 
-    my_date = date.today()
+    #my_date = date.today()
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
     my_datetime = datetime(my_date.year, my_date.month, my_date.day)
+
+    foods.sort()
+    foods.reverse()
 
     for food in foods:
         if my_datetime.date() == food.date_posted.date():
@@ -51,6 +88,25 @@ def new_fooditem_post():
     calorie = request.form.get('calorie')
 
     date = datetime.strptime(date_post, "%Y-%m-%d")
+
+    print(calorie, date, food_name)
+    food = FoodItem(food_name=food_name, date_posted=date,
+                    calorie=calorie, author=current_user)
+    db.session.add(food)
+    db.session.commit()
+    flash('Your food item has been added!')
+    return redirect(url_for('main.index'))
+
+
+@main.route("/fooditem/add/<int:cal>/<string:food>", methods=['GET', 'POST'])
+@login_required
+def add_search(food, cal):
+    food_name = food
+    calorie = cal
+
+    my_date = datetime.now(pytz.timezone('US/Pacific'))
+    date_post = str(datetime(my_date.year, my_date.month, my_date.day))
+    date = datetime.strptime(date_post, '%Y-%m-%d %H:%M:%S')
 
     print(calorie, date, food_name)
     food = FoodItem(food_name=food_name, date_posted=date,
@@ -95,11 +151,14 @@ def search():
 @login_required
 def search_post():
     food_name = request.form.get('food-name')
-    result_string = food_api_request(food_name)
-    print(result_string)
-    item_name = result_string[0][0], result_string[1][0], result_string[2][0]
-    item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
-    return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
+    try:
+        result_string = food_api_request(food_name)
+        print(result_string)
+        item_name = result_string[0][0], result_string[1][0], result_string[2][0]
+        item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
+        return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
+    except:
+        return render_template('result_fail.html')
 
 
 def food_api_request(food):

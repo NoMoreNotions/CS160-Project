@@ -20,6 +20,9 @@ class FoodItem(db.Model):
     calorie = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def __lt__(self, other):
+        return self.date_posted < other.date_posted
+
 
 class FoodData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
