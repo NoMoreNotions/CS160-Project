@@ -3,6 +3,10 @@
   rel="stylesheet"
   href="{{ url_for('static', filename= 'extended_beauty.css') }}"
 />
+<link
+   rel="stylesheet"
+   href="{{ url_for('static', filename= 'style.css') }}"
+/>
 {% endblock %} {% block content %}
 <div id="intro">
   {% with messages = get_flashed_messages() %} {% if messages %}
@@ -18,13 +22,13 @@
      <br />With this application, you can:
   </p>
   <p>
-     - search for food via the NutritionIX database
-  </p>
-  <p>
      - add/modify calories to a personalized calorie counter
   </p>
   <p>
-     - get nutrition facts (in progress)
+     - search for food via the NutritionIX database
+  </p>
+  <p>
+     - get nutrition facts inlcuding calories, carbohydrates, proteins, and fats
   </p>
   <p>
      - view food history graph (in progress)

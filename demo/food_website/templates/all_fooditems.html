@@ -4,16 +4,16 @@
   href="{{ url_for('static', filename= 'extended_beauty.css') }}"
 />
 {% endblock %} {% block content %}
-<h1>
+<h1 id="intro">
   Welcome, {{ user.name }}!
 </h1>
-<h2>
+<h2 id="intro">
   Your Total Calorie today is {{ totalCalorie }}
 </h2>
 <div>
-  <table class="table table-hover" style="width: 1000px;">
+  <table class="table table-hover" width="100%" cellspacing="0" cellpadding="0" style='font-family: "Arvo", serif;'>
     <thead class="thead-dark">
-      <tr>
+      <tr id="textstyle">
         <th scope="col">Number of Calories</th>
         <th scope="col">Date Of Consumption</th>
         <th scope="col">Food Name</th>
