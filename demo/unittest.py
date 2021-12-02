@@ -38,5 +38,5 @@ class FlaskTestCase(unittest.TestCase):
         return client.get('/logout', follow_redirects=True)
 
 
-if name == 'main':
+if app.name == 'main':
     unittest.main()
