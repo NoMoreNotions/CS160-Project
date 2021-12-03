@@ -156,19 +156,28 @@ def search_post():
         print(result_string)
         item_name = result_string[0][0], result_string[1][0], result_string[2][0]
         item_calorie = result_string[0][1], result_string[1][1], result_string[2][1]
-        return render_template('result.html', item_name=item_name, item_calorie=item_calorie)
+        nutrition_info = (result_string[0][6],result_string[0][9],result_string[0][3]), (result_string[1][6],result_string[1][9],result_string[1][3]), (result_string[2][6],result_string[2][9],result_string[2][3])
+        return render_template('result.html', item_name=item_name, item_calorie=item_calorie, nutrition_info=nutrition_info)
     except:
         return render_template('result_fail.html')
 
 
 def food_api_request(food):
-    site = "https://api.nutritionix.com/v1_1/search/{}?results=0:20&fields=item_name,brand_name,item_id,nf_calories&appId=e3a7c4fc&appKey=4f44386d9119e50a1cc5fac766e51197".format(
+    site = "https://api.nutritionix.com/v1_1/search/{}?results=0:20&fields=item_name,brand_name,item_id,nf_calories,nf_saturated_fat,nf_total_fat,nf_cholesterol,nf_sodium,nf_total_carbohydrate,nf_dietary_fiber,nf_sugars,nf_protein&appId=e3a7c4fc&appKey=4f44386d9119e50a1cc5fac766e51197".format(
         food)
     response = requests.get(site)
     jsontext = json.loads(response.text)
     foodnames = []
     for i in range(3):
         pair = (jsontext["hits"][i]["fields"]["item_name"],
-                jsontext["hits"][i]["fields"]["nf_calories"])
+                jsontext["hits"][i]["fields"]["nf_calories"],
+                jsontext["hits"][i]["fields"]["nf_saturated_fat"],
+                jsontext["hits"][i]["fields"]["nf_total_fat"],
+                jsontext["hits"][i]["fields"]["nf_cholesterol"],
+                jsontext["hits"][i]["fields"]["nf_sodium"],
+                jsontext["hits"][i]["fields"]["nf_total_carbohydrate"],
+                jsontext["hits"][i]["fields"]["nf_dietary_fiber"],
+                jsontext["hits"][i]["fields"]["nf_sugars"],
+                jsontext["hits"][i]["fields"]["nf_protein"])
         foodnames.append(pair)
     return foodnames
