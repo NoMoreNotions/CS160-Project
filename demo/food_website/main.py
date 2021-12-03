@@ -95,7 +95,7 @@ def new_fooditem_post():
     db.session.add(food)
     db.session.commit()
     flash('Your food item has been added!')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.user_fooditems'))
 
 
 @main.route("/fooditem/add/<int:cal>/<string:food>", methods=['GET', 'POST'])
@@ -114,7 +114,7 @@ def add_search(food, cal):
     db.session.add(food)
     db.session.commit()
     flash('Your food item has been added!')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.user_fooditems'))
 
 
 @main.route("/fooditem/<int:food_id>/update", methods=['GET', 'POST'])
